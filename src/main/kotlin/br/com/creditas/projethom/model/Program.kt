@@ -5,20 +5,18 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.OneToMany
+import javax.persistence.ManyToOne
 
 @Entity
-data class Team(
+data class Program(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val id: Long,
   val name: String,
-  val description: String,
-  val tribe: Tribe,
-  @OneToMany
-  val members: List<Employee> = ArrayList(),
-  @OneToMany
-  val programs: List<Program> = ArrayList(),
+  @ManyToOne
+  val owner: Team,
+  val documentation: String,
+  val url: String,
   val createdAt: LocalDateTime = LocalDateTime.now(),
   var updatedAt: LocalDateTime = LocalDateTime.now()
 )

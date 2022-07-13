@@ -1,7 +1,7 @@
 package br.com.creditas.projethom.model
 
 import java.time.LocalDateTime
-import java.util.*
+import java.util.UUID
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.ManyToOne

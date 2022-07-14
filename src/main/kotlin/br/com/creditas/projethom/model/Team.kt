@@ -11,7 +11,7 @@ data class Team(
   @Id
   val id: UUID = UUID.randomUUID(),
   val name: String,
-  val description: String,
+  val description: String? = null,
   val tribe: Tribe,
   @OneToMany
   val members: List<Employee> = ArrayList(),

@@ -1,7 +1,6 @@
 package br.com.creditas.projethom.controller
 
 import br.com.creditas.projethom.dto.TeamView
-import br.com.creditas.projethom.model.Team
 import br.com.creditas.projethom.service.TeamService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

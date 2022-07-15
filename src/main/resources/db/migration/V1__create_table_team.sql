@@ -3,7 +3,7 @@ create table team(
     name varchar(50) not null,
     description varchar(200),
     tribe varchar(50) not null,
-    created_at datetime not null,
-    updated_at datetime not null,
+    created_at date not null,
+    updated_at date not null,
     primary key(id)
 );

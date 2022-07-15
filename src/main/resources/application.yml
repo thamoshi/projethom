@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:postgresql://localhost:5432/team_systems?user=postgres&password=postgres}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ssZ
+    mapper:
+      ACCEPT_CASE_INSENSITIVE_ENUMS: true

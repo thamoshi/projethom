@@ -1,5 +1,6 @@
 package br.com.creditas.projethom.controller
 
+import br.com.creditas.projethom.dto.TeamView
 import br.com.creditas.projethom.model.Team
 import br.com.creditas.projethom.service.TeamService
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,7 +14,7 @@ class TeamController (
 ) {
 
   @GetMapping
-  fun getTeams(): List<Team> {
+  fun getTeams(): List<TeamView> {
     return service.teamList()
   }
 

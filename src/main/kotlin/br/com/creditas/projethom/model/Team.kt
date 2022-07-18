@@ -13,9 +13,9 @@ data class Team(
   val name: String,
   val description: String? = null,
   val tribe: Tribe,
-  @OneToMany
+  @OneToMany(mappedBy = "team")
   val members: List<Employee> = ArrayList(),
-  @OneToMany
+  @OneToMany(mappedBy = "owner")
   val systems: List<System> = ArrayList(),
   val createdAt: LocalDateTime = LocalDateTime.now(),
   var updatedAt: LocalDateTime = LocalDateTime.now()

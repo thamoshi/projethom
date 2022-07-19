@@ -8,19 +8,18 @@ import java.util.UUID
 
 @Service
 class TeamService(
-  private val teamRepository: TeamRepository,
-  private val teamResponse: TeamResponse
+  private val teamRepository: TeamRepository
 ) {
 
   fun teamList(): List<TeamResponse> {
     return teamRepository.findAll().map{
-      teamResponse.fromEntity(it)
+      TeamResponse().fromEntity(it)
     }
   }
 
   fun teamById(id:UUID): TeamResponse {
     val team = teamRepository.findById(id).orElseThrow()
-    return teamResponse.fromEntity(team)
+    return TeamResponse().fromEntity(team)
   }
 
   fun registerTeam(

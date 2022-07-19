@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository
 import java.util.UUID
 
 @Repository
-interface TeamRepository : JpaRepository<Team,UUID> {
+interface TeamRepository : JpaRepository<Team, UUID> {
 
 }

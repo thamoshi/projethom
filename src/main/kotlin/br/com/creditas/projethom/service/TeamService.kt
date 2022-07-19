@@ -6,6 +6,7 @@ import br.com.creditas.projethom.mapper.TeamFormMapper
 import br.com.creditas.projethom.mapper.TeamViewMapper
 import org.springframework.stereotype.Service
 import br.com.creditas.projethom.repository.TeamRepository
+import java.util.UUID
 
 @Service
 class TeamService(
@@ -19,6 +20,11 @@ class TeamService(
     return teams.map{
       teamViewMapper.map(it)
     }
+  }
+
+  fun teamById(id:UUID): TeamView {
+    val team = teamRepository.findById(id).orElseThrow()
+    return teamViewMapper.map(team)
   }
 
   fun registerTeam(

@@ -1,7 +1,7 @@
 package br.com.creditas.projethom.controller
 
-import br.com.creditas.projethom.dto.TeamForm
-import br.com.creditas.projethom.dto.TeamView
+import br.com.creditas.projethom.dto.TeamRequest
+import br.com.creditas.projethom.dto.TeamResponse
 import br.com.creditas.projethom.service.TeamService
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.GetMapping
@@ -20,23 +20,23 @@ class TeamController (
 ) {
 
   @GetMapping
-  fun getTeams(): List<TeamView> {
+  fun getTeams(): List<TeamResponse> {
     return service.teamList()
   }
 
   @GetMapping("/{id}")
   fun getTeamById(
     @PathVariable id:UUID
-  ): TeamView {
+  ): TeamResponse {
     return service.teamById(id)
   }
 
   @PostMapping
   @Transactional
   fun postTeam(
-    @RequestBody @Valid newTeamForm: TeamForm
+    @RequestBody @Valid newTeamRequest: TeamRequest
   ) {
-    service.registerTeam(newTeamForm)
+    service.registerTeam(newTeamRequest)
   }
 
 }

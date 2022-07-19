@@ -1,9 +1,7 @@
 package br.com.creditas.projethom.service
 
-import br.com.creditas.projethom.dto.TeamForm
-import br.com.creditas.projethom.dto.TeamView
-import br.com.creditas.projethom.mapper.TeamFormMapper
-import br.com.creditas.projethom.mapper.TeamViewMapper
+import br.com.creditas.projethom.dto.TeamRequest
+import br.com.creditas.projethom.dto.TeamResponse
 import org.springframework.stereotype.Service
 import br.com.creditas.projethom.repository.TeamRepository
 import java.util.UUID
@@ -11,26 +9,24 @@ import java.util.UUID
 @Service
 class TeamService(
   private val teamRepository: TeamRepository,
-  private val teamViewMapper: TeamViewMapper,
-  private val teamFormMapper: TeamFormMapper
+  private val teamResponse: TeamResponse
 ) {
 
-  fun teamList(): List<TeamView> {
-    val teams = teamRepository.findAll()
-    return teams.map{
-      teamViewMapper.map(it)
+  fun teamList(): List<TeamResponse> {
+    return teamRepository.findAll().map{
+      teamResponse.fromEntity(it)
     }
   }
 
-  fun teamById(id:UUID): TeamView {
+  fun teamById(id:UUID): TeamResponse {
     val team = teamRepository.findById(id).orElseThrow()
-    return teamViewMapper.map(team)
+    return teamResponse.fromEntity(team)
   }
 
   fun registerTeam(
-    teamForm: TeamForm
+    teamRequest: TeamRequest
   ){
-    val team = teamFormMapper.map(teamForm)
+    val team = teamRequest.toEntity(teamRequest)
     teamRepository.save(team)
   }
 

@@ -3,13 +3,13 @@ package br.com.creditas.projethom.controller
 import br.com.creditas.projethom.dto.TeamRequest
 import br.com.creditas.projethom.dto.TeamResponse
 import br.com.creditas.projethom.service.TeamService
-import org.springframework.http.ResponseEntity
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 import javax.validation.Valid
@@ -33,12 +33,9 @@ class TeamController(
     }
 
     @PostMapping
-    @Transactional
+    @ResponseStatus(HttpStatus.CREATED)
     fun postTeam(
         @RequestBody @Valid newTeamRequest: TeamRequest
-    ): ResponseEntity<TeamResponse> {
-        val teamResponse = teamService.registerTeam(newTeamRequest)
-        return ResponseEntity.ok().body(teamResponse)
-    }
+    ): TeamResponse = teamService.registerTeam(newTeamRequest)
 
 }

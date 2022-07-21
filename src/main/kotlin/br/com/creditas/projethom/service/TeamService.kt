@@ -13,21 +13,21 @@ class TeamService(
 
     fun teamList(): List<TeamResponse> {
         return teamRepository.findAll().map {
-            TeamResponse().fromEntity(it)
+            TeamResponse.fromEntity(it)
         }
     }
 
     fun teamById(id: UUID): TeamResponse {
         val team = teamRepository.findById(id).orElseThrow()
-        return TeamResponse().fromEntity(team)
+        return TeamResponse.fromEntity(team)
     }
 
     fun registerTeam(
         teamRequest: TeamRequest
     ): TeamResponse {
-        val team = teamRequest.toEntity(teamRequest)
+        val team = TeamRequest.toEntity(teamRequest)
         teamRepository.save(team)
-        return TeamResponse().fromEntity(team)
+        return TeamResponse.fromEntity(team)
     }
 
 }

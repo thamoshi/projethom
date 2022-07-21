@@ -6,21 +6,25 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 data class TeamResponse(
-    val id: UUID? = null,
-    val name: String? = null,
+    val id: UUID,
+    val name: String,
     val description: String? = null,
-    val tribe: Tribe? = null,
-    val createdAt: LocalDateTime? = null
+    val tribe: Tribe,
+    val createdAt: LocalDateTime
 ) {
 
-    fun fromEntity(team: Team): TeamResponse {
-        return TeamResponse(
-            id = team.id,
-            name = team.name,
-            description = team.description,
-            tribe = team.tribe,
-            createdAt = team.createdAt
-        )
+    companion object{
+
+        fun fromEntity(team: Team): TeamResponse {
+            return TeamResponse(
+                id = team.id,
+                name = team.name,
+                description = team.description,
+                tribe = team.tribe,
+                createdAt = team.createdAt
+            )
+        }
+
     }
 
 }

@@ -28,14 +28,14 @@ class TeamController(
     fun getTeams(
         @RequestParam(required = false) tribe: String?
     ): List<TeamResponse> {
-        return teamService.teamList(tribe)
+        return teamService.listTeams(tribe)
     }
 
     @GetMapping("/{id}")
     fun getTeamById(
         @PathVariable id: UUID
     ): TeamResponse {
-        return teamService.teamById(id)
+        return teamService.getTeamById(id)
     }
 
     @PostMapping

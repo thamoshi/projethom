@@ -13,7 +13,7 @@ class TeamService(
     private val teamRepository: TeamRepository
 ) {
 
-    fun teamList(tribe: String?): List<TeamResponse> {
+    fun listTeams(tribe: String?): List<TeamResponse> {
         if (tribe == null) {
             return teamRepository.findAll().map{
                 TeamResponse.fromEntity(it)
@@ -34,7 +34,7 @@ class TeamService(
         }
     }
 
-    fun teamById(id: UUID): TeamResponse {
+    fun getTeamById(id: UUID): TeamResponse {
         val team = teamRepository.findById(id).orElseThrow()
         return TeamResponse.fromEntity(team)
     }

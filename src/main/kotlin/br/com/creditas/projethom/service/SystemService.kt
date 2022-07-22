@@ -29,7 +29,12 @@ class SystemService(
     fun registerSystem(
         systemRequest: SystemRequest
     ): SystemResponse {
-        val system = SystemRequest.toEntity(systemRequest)
+        val team = if (systemRequest.teamId == null) {
+            null
+        } else {
+            teamRepository.findById(systemRequest.teamId).orElseThrow()
+        }
+        val system = SystemRequest.toEntity(systemRequest, team)
         systemRepository.save(system)
         return SystemResponse.fromEntity(system)
     }

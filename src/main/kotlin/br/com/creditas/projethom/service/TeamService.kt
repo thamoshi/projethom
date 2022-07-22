@@ -2,7 +2,6 @@ package br.com.creditas.projethom.service
 
 import br.com.creditas.projethom.dto.TeamRequest
 import br.com.creditas.projethom.dto.TeamResponse
-import br.com.creditas.projethom.dto.UpdateTeamRequest
 import br.com.creditas.projethom.model.Tribe
 import org.springframework.stereotype.Service
 import br.com.creditas.projethom.repository.TeamRepository
@@ -48,9 +47,10 @@ class TeamService(
     }
 
     fun updateTeam(
-        updateTeamRequest: UpdateTeamRequest
+        id: UUID,
+        updateTeamRequest: TeamRequest
     ): TeamResponse {
-        val team = teamRepository.findById(updateTeamRequest.id).orElseThrow()
+        val team = teamRepository.findById(id).orElseThrow()
         team.name = updateTeamRequest.name
         team.description = updateTeamRequest.description
         team.tribe = updateTeamRequest.tribe

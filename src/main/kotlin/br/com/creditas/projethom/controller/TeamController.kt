@@ -2,7 +2,6 @@ package br.com.creditas.projethom.controller
 
 import br.com.creditas.projethom.dto.TeamRequest
 import br.com.creditas.projethom.dto.TeamResponse
-import br.com.creditas.projethom.dto.UpdateTeamRequest
 import br.com.creditas.projethom.service.TeamService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
@@ -44,10 +43,11 @@ class TeamController(
         @RequestBody @Valid newTeamRequest: TeamRequest
     ): TeamResponse = teamService.registerTeam(newTeamRequest)
 
-    @PutMapping
+    @PutMapping("/{id}")
     fun putTeam(
-        @RequestBody @Valid updateTeamRequest: UpdateTeamRequest
-    ): TeamResponse = teamService.updateTeam(updateTeamRequest)
+        @PathVariable id: UUID,
+        @RequestBody @Valid updateTeamRequest: TeamRequest
+    ): TeamResponse = teamService.updateTeam(id, updateTeamRequest)
 
     @DeleteMapping("/{id}")
     fun deleteTeam(

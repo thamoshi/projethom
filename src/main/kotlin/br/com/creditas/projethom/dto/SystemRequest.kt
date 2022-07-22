@@ -6,7 +6,7 @@ import java.util.UUID
 
 data class SystemRequest(
     val name: String,
-    val teamId: UUID?,
+    val teamId: UUID? = null,
     val documentation: String,
     val url: String
 ) {

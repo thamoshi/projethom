@@ -34,4 +34,28 @@ class SystemService(
         return SystemResponse.fromEntity(system)
     }
 
+    fun updateSystem(
+        id: UUID,
+        updateSystemRequest: SystemRequest
+    ): SystemResponse {
+        val system = systemRepository.findById(id).orElseThrow()
+        val team = if (updateSystemRequest.teamId == null) {
+            null
+        } else {
+            teamRepository.findById(updateSystemRequest.teamId).orElseThrow()
+        }
+        system.name = updateSystemRequest.name
+        system.owner = team
+        system.documentation = updateSystemRequest.documentation
+        system.url = updateSystemRequest.url
+        systemRepository.save(system)
+        return SystemResponse.fromEntity(system)
+    }
+
+    fun deleteSystemById(
+        id: UUID
+    ) {
+        systemRepository.deleteById(id)
+    }
+
 }

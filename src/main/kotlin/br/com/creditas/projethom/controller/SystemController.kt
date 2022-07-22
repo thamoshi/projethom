@@ -5,9 +5,11 @@ import br.com.creditas.projethom.dto.SystemResponse
 import br.com.creditas.projethom.service.SystemService
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseStatus
 import java.util.UUID
@@ -35,5 +37,19 @@ class SystemController(
     fun postSystem(
         @RequestBody @Valid newSystemRequest: SystemRequest
     ): SystemResponse = systemService.registerSystem(newSystemRequest)
+
+    @PutMapping("/{id")
+    @ResponseStatus(HttpStatus.CREATED)
+    fun putSystem(
+        @PathVariable id: UUID,
+        @RequestBody @Valid updateSystemRequest: SystemRequest
+    ): SystemResponse = systemService.updateSystem(id,updateSystemRequest)
+
+    @DeleteMapping
+    fun deleteSystem(
+        @PathVariable id: UUID
+    ) {
+        systemService.deleteSystemById(id)
+    }
 
 }

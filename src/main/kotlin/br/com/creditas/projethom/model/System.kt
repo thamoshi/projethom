@@ -10,11 +10,11 @@ import javax.persistence.ManyToOne
 data class System(
     @Id
     val id: UUID = UUID.randomUUID(),
-    val name: String,
+    var name: String,
     @ManyToOne
-    val owner: Team? = null,
-    val documentation: String,
-    val url: String,
+    var owner: Team? = null,
+    var documentation: String,
+    var url: String,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = LocalDateTime.now()
 )

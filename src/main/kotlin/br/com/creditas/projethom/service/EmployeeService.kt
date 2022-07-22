@@ -13,13 +13,13 @@ class EmployeeService(
     private val teamRepository: TeamRepository
 ) {
 
-    fun employeeList(): List<EmployeeResponse> {
+    fun listEmployees(): List<EmployeeResponse> {
         return employeeRepository.findAll().map {
             EmployeeResponse.fromEntity(it)
         }
     }
 
-    fun employeeById(
+    fun getEmployeeById(
         id: UUID
     ): EmployeeResponse{
         val employee = employeeRepository.findById(id).orElseThrow()

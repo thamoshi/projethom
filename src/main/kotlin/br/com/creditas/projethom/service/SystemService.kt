@@ -5,8 +5,7 @@ import br.com.creditas.projethom.dto.SystemResponse
 import br.com.creditas.projethom.repository.SystemRepository
 import br.com.creditas.projethom.repository.TeamRepository
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RequestParam
-import java.util.*
+import java.util.UUID
 
 @Service
 class SystemService(

@@ -36,5 +36,23 @@ class EmployeeService(
         return EmployeeResponse.fromEntity(employee)
     }
 
+    fun updateEmployee(
+        id: UUID,
+        updateEmployeeRequest: EmployeeRequest
+    ): EmployeeResponse {
+        val employee = employeeRepository.findById(id).orElseThrow()
+        val newTeam = teamRepository.findById(updateEmployeeRequest.teamId).orElseThrow()
+        employee.personId = updateEmployeeRequest.personId
+        employee.team = newTeam
+        employee.role = updateEmployeeRequest.role
+        employeeRepository.save(employee)
+        return EmployeeResponse.fromEntity(employee)
+    }
+
+    fun deleteEmployeeById(
+        id: UUID
+    ) {
+        employeeRepository.deleteById(id)
+    }
 
 }

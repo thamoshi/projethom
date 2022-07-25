@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.UUID
 import javax.validation.Valid
 
@@ -23,8 +24,10 @@ class EmployeeController(
 ) {
 
     @GetMapping
-    fun getEmployees(): List<EmployeeResponse> {
-        return employeeService.listEmployees()
+    fun getEmployees(
+        @RequestParam(required = false) teamName: String?
+    ): List<EmployeeResponse> {
+        return employeeService.listEmployees(teamName)
     }
 
     @GetMapping("/{id}")
@@ -32,13 +35,6 @@ class EmployeeController(
         @PathVariable id: UUID
     ): EmployeeResponse {
         return employeeService.getEmployeeById(id)
-    }
-
-    @GetMapping("/{team}")
-    fun getEmployeesByTeam(
-        @PathVariable team: String
-    ): List<EmployeeResponse> {
-        return employeeService.listEmployeesByTeamName(team)
     }
 
     @PostMapping

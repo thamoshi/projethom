@@ -13,9 +13,21 @@ class EmployeeService(
     private val teamRepository: TeamRepository
 ) {
 
-    fun listEmployees(): List<EmployeeResponse> {
-        return employeeRepository.findAll().map {
-            EmployeeResponse.fromEntity(it)
+    fun listEmployees(
+        teamName: String?
+    ): List<EmployeeResponse> {
+        return if (teamName == null) {
+            employeeRepository.findAll().map {
+                EmployeeResponse.fromEntity(it)
+            }
+        } else {
+            try {
+                employeeRepository.findByTeamName(teamName).map {
+                    EmployeeResponse.fromEntity(it)
+                }
+            } catch(e: IllegalArgumentException){
+                emptyList()
+            }
         }
     }
 

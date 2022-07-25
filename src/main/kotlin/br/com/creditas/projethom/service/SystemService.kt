@@ -26,6 +26,13 @@ class SystemService(
         return SystemResponse.fromEntity(system)
     }
 
+    fun getDocumentationBySystemId(
+        id: UUID
+    ): String {
+        val system = systemRepository.findById(id).orElseThrow()
+        return system.documentation
+    }
+
     fun registerSystem(
         systemRequest: SystemRequest
     ): SystemResponse {

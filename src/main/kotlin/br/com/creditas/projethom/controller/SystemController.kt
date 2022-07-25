@@ -34,6 +34,13 @@ class SystemController(
         return systemService.getSystemById(id)
     }
 
+    @GetMapping("/documentation/{id}")
+    fun getSystemDocumentation(
+        @PathVariable id: UUID
+    ): String {
+        return systemService.getDocumentationBySystemId(id)
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun postSystem(

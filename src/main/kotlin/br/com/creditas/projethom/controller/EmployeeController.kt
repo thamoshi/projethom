@@ -34,6 +34,13 @@ class EmployeeController(
         return employeeService.getEmployeeById(id)
     }
 
+    @GetMapping("/{team}")
+    fun getEmployeesByTeam(
+        @PathVariable team: String
+    ): List<EmployeeResponse> {
+        return employeeService.listEmployeesByTeamName(team)
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun postEmployee(

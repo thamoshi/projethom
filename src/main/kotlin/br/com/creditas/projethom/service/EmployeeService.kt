@@ -27,6 +27,15 @@ class EmployeeService(
 
     }
 
+    fun listEmployeesByTeamName(
+        team: String
+    ): List<EmployeeResponse> {
+        val employees = employeeRepository.findByTeamName(team)
+        return employees.map {
+            EmployeeResponse.fromEntity(it)
+        }
+    }
+
     fun registerEmployee(
         employeeRequest: EmployeeRequest
     ): EmployeeResponse {

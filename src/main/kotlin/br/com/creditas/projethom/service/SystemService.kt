@@ -5,6 +5,7 @@ import br.com.creditas.projethom.dto.SystemResponse
 import br.com.creditas.projethom.repository.SystemRepository
 import br.com.creditas.projethom.repository.TeamRepository
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.*
 
 @Service
@@ -13,9 +14,21 @@ class SystemService(
     private val teamRepository: TeamRepository
 ) {
 
-    fun listSystems(): List<SystemResponse> {
-        return systemRepository.findAll().map{
-            SystemResponse.fromEntity(it)
+    fun listSystems(
+        teamName: String?
+    ): List<SystemResponse> {
+        return if (teamName == null) {
+            systemRepository.findAll().map{
+                SystemResponse.fromEntity(it)
+            }
+        } else {
+            try {
+                systemRepository.findByOwnerName(teamName).map {
+                    SystemResponse.fromEntity(it)
+                }
+            } catch (e: IllegalArgumentException) {
+                emptyList()
+            }
         }
     }
 

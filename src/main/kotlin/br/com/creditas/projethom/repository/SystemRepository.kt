@@ -7,5 +7,8 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface SystemRepository: JpaRepository<System, UUID> {
+    fun findByOwnerName(
+        teamName: String
+    ): List<System>
 
 }

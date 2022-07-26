@@ -14,7 +14,7 @@ class TeamService(
 
     fun listTeams(tribe: String?): List<TeamResponse> {
         if (tribe == null) {
-            return teamRepository.findAll().map{
+            return teamRepository.findAll().map {
                 TeamResponse.fromEntity(it)
             }
         } else {

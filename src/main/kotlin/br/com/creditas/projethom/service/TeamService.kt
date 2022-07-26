@@ -34,7 +34,7 @@ class TeamService(
     }
 
     fun getTeamById(id: UUID): TeamResponse {
-        val team = teamRepository.findById(id).orElseThrow()
+        val team = teamRepository.getReferenceById(id)
         return TeamResponse.fromEntity(team)
     }
 
@@ -50,7 +50,7 @@ class TeamService(
         id: UUID,
         updateTeamRequest: TeamRequest
     ): TeamResponse {
-        val team = teamRepository.findById(id).orElseThrow()
+        val team = teamRepository.getReferenceById(id)
         team.name = updateTeamRequest.name
         team.description = updateTeamRequest.description
         team.tribe = updateTeamRequest.tribe

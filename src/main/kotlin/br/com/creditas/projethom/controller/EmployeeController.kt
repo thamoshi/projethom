@@ -39,14 +39,14 @@ class EmployeeController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun postEmployee(
+    fun registerEmployee(
         @RequestBody @Valid newEmployeeRequest: EmployeeRequest
     ): EmployeeResponse = employeeService.registerEmployee(newEmployeeRequest)
 
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    fun putEmployee(
+    fun updateEmployee(
         @PathVariable id: UUID,
         @RequestBody @Valid updateEmployeeRequest: EmployeeRequest
     ): EmployeeResponse = employeeService.updateEmployee(id, updateEmployeeRequest)

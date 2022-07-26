@@ -13,16 +13,28 @@ class EmployeeService(
     private val teamRepository: TeamRepository
 ) {
 
-    fun listEmployees(): List<EmployeeResponse> {
-        return employeeRepository.findAll().map {
-            EmployeeResponse.fromEntity(it)
+    fun listEmployees(
+        teamName: String?
+    ): List<EmployeeResponse> {
+        return if (teamName == null) {
+            employeeRepository.findAll().map {
+                EmployeeResponse.fromEntity(it)
+            }
+        } else {
+            try {
+                employeeRepository.findByTeamName(teamName).map {
+                    EmployeeResponse.fromEntity(it)
+                }
+            } catch(e: IllegalArgumentException) {
+                emptyList()
+            }
         }
     }
 
     fun getEmployeeById(
         id: UUID
-    ): EmployeeResponse{
-        val employee = employeeRepository.findById(id).orElseThrow()
+    ): EmployeeResponse {
+        val employee = employeeRepository.getReferenceById(id)
         return EmployeeResponse.fromEntity(employee)
 
     }
@@ -30,11 +42,29 @@ class EmployeeService(
     fun registerEmployee(
         employeeRequest: EmployeeRequest
     ): EmployeeResponse {
-        val team = teamRepository.findById(employeeRequest.teamId).orElseThrow()
+        val team = teamRepository.getReferenceById(employeeRequest.teamId)
         val employee = EmployeeRequest.toEntity(employeeRequest, team)
         employeeRepository.save(employee)
         return EmployeeResponse.fromEntity(employee)
     }
 
+    fun updateEmployee(
+        id: UUID,
+        updateEmployeeRequest: EmployeeRequest
+    ): EmployeeResponse {
+        val employee = employeeRepository.getReferenceById(id)
+        val newTeam = teamRepository.getReferenceById(updateEmployeeRequest.teamId)
+        employee.personId = updateEmployeeRequest.personId
+        employee.team = newTeam
+        employee.role = updateEmployeeRequest.role
+        employeeRepository.save(employee)
+        return EmployeeResponse.fromEntity(employee)
+    }
+
+    fun deleteEmployeeById(
+        id: UUID
+    ) {
+        employeeRepository.deleteById(id)
+    }
 
 }

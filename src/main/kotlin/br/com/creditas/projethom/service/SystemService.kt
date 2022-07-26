@@ -21,12 +21,8 @@ class SystemService(
                 SystemResponse.fromEntity(it)
             }
         } else {
-            try {
-                systemRepository.findByOwnerName(teamName).map {
-                    SystemResponse.fromEntity(it)
-                }
-            } catch (e: IllegalArgumentException) {
-                emptyList()
+            systemRepository.findByOwnerName(teamName).map {
+                SystemResponse.fromEntity(it)
             }
         }
     }

@@ -4,5 +4,5 @@ enum class Tribe {
     AUTO,
     HOME,
     BENEFITS,
-    PLATAFORM
+    PLATFORM
 }

@@ -2,6 +2,7 @@ package br.com.creditas.projethom.service
 
 import br.com.creditas.projethom.dto.TeamRequest
 import br.com.creditas.projethom.dto.TeamResponse
+import br.com.creditas.projethom.model.Tribe
 import org.springframework.stereotype.Service
 import br.com.creditas.projethom.repository.TeamRepository
 import java.util.UUID
@@ -11,13 +12,28 @@ class TeamService(
     private val teamRepository: TeamRepository
 ) {
 
-    fun teamList(): List<TeamResponse> {
-        return teamRepository.findAll().map {
-            TeamResponse.fromEntity(it)
+    fun listTeams(tribe: String?): List<TeamResponse> {
+        if (tribe == null) {
+            return teamRepository.findAll().map{
+                TeamResponse.fromEntity(it)
+            }
+        } else {
+            return try {
+                val teams = teamRepository.findByTribe(
+                    tribe.let {
+                        Tribe.valueOf(tribe.uppercase())
+                    }
+                )
+                teams.map {
+                    TeamResponse.fromEntity(it)
+                }
+            } catch (e: IllegalArgumentException) {
+                emptyList()
+            }
         }
     }
 
-    fun teamById(id: UUID): TeamResponse {
+    fun getTeamById(id: UUID): TeamResponse {
         val team = teamRepository.findById(id).orElseThrow()
         return TeamResponse.fromEntity(team)
     }
@@ -28,6 +44,24 @@ class TeamService(
         val team = TeamRequest.toEntity(teamRequest)
         teamRepository.save(team)
         return TeamResponse.fromEntity(team)
+    }
+
+    fun updateTeam(
+        id: UUID,
+        updateTeamRequest: TeamRequest
+    ): TeamResponse {
+        val team = teamRepository.findById(id).orElseThrow()
+        team.name = updateTeamRequest.name
+        team.description = updateTeamRequest.description
+        team.tribe = updateTeamRequest.tribe
+        teamRepository.save(team)
+        return TeamResponse.fromEntity(team)
+    }
+
+    fun deleteTeamById(
+        id: UUID
+    ) {
+        teamRepository.deleteById(id)
     }
 
 }

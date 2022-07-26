@@ -6,7 +6,7 @@ import br.com.creditas.projethom.model.System
 import org.springframework.stereotype.Repository
 
 @Repository
-interface SystemRepository: JpaRepository<System, UUID> {
+interface SystemRepository : JpaRepository<System, UUID> {
     fun findByOwnerName(
         teamName: String
     ): List<System>

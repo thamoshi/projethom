@@ -12,11 +12,11 @@ import javax.persistence.EnumType
 data class Employee(
     @Id
     val id: UUID = UUID.randomUUID(),
-    val personId: UUID? = null,
+    var personId: UUID? = null,
     @ManyToOne
-    val team: Team,
+    var team: Team,
     @Enumerated(EnumType.STRING)
-    val role: Role,
+    var role: Role,
     val createdAt: LocalDateTime = LocalDateTime.now(),
     var updatedAt: LocalDateTime = LocalDateTime.now()
 )

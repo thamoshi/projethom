@@ -39,12 +39,12 @@ class TeamController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun postTeam(
+    fun registerTeam(
         @RequestBody @Valid newTeamRequest: TeamRequest
     ): TeamResponse = teamService.registerTeam(newTeamRequest)
 
     @PutMapping("/{id}")
-    fun putTeam(
+    fun updateTeam(
         @PathVariable id: UUID,
         @RequestBody @Valid updateTeamRequest: TeamRequest
     ): TeamResponse = teamService.updateTeam(id, updateTeamRequest)

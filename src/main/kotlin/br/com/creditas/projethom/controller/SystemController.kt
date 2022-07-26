@@ -46,13 +46,13 @@ class SystemController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun postSystem(
+    fun registerSystem(
         @RequestBody @Valid newSystemRequest: SystemRequest
     ): SystemResponse = systemService.registerSystem(newSystemRequest)
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    fun putSystem(
+    fun updateSystem(
         @PathVariable id: UUID,
         @RequestBody @Valid updateSystemRequest: SystemRequest
     ): SystemResponse = systemService.updateSystem(id,updateSystemRequest)

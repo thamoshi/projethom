@@ -17,7 +17,7 @@ class SystemService(
         teamName: String? = null
     ): List<SystemResponse> {
         return if (teamName == null) {
-            systemRepository.findAll().map{
+            systemRepository.findAll().map {
                 SystemResponse.fromEntity(it)
             }
         } else {
@@ -30,26 +30,24 @@ class SystemService(
     fun getSystemById(
         id: UUID
     ): SystemResponse {
-        val system = systemRepository.findById(id).orElseThrow()
+        val system = systemRepository.getReferenceById(id)
         return SystemResponse.fromEntity(system)
     }
 
     fun getDocumentationBySystemId(
         id: UUID
     ): String {
-        val system = systemRepository.findById(id).orElseThrow()
+        val system = systemRepository.getReferenceById(id)
         return system.documentation
     }
 
     fun registerSystem(
         systemRequest: SystemRequest
     ): SystemResponse {
-        val team = if (systemRequest.teamId == null) {
-            null
-        } else {
-            teamRepository.findById(systemRequest.teamId).orElseThrow()
+        val owner = systemRequest.teamId?.let {
+            teamRepository.getReferenceById(it)
         }
-        val system = SystemRequest.toEntity(systemRequest, team)
+        val system = SystemRequest.toEntity(systemRequest, owner)
         systemRepository.save(system)
         return SystemResponse.fromEntity(system)
     }
@@ -58,14 +56,12 @@ class SystemService(
         id: UUID,
         updateSystemRequest: SystemRequest
     ): SystemResponse {
-        val system = systemRepository.findById(id).orElseThrow()
-        val team = if (updateSystemRequest.teamId == null) {
-            null
-        } else {
-            teamRepository.findById(updateSystemRequest.teamId).orElseThrow()
+        val system = systemRepository.getReferenceById(id)
+        val owner = updateSystemRequest.teamId?.let {
+            teamRepository.getReferenceById(it)
         }
         system.name = updateSystemRequest.name
-        system.owner = team
+        system.owner = owner
         system.documentation = updateSystemRequest.documentation
         system.url = updateSystemRequest.url
         systemRepository.save(system)

@@ -14,7 +14,7 @@ class SystemService(
 ) {
 
     fun listSystems(
-        teamName: String?
+        teamName: String? = null
     ): List<SystemResponse> {
         return if (teamName == null) {
             systemRepository.findAll().map{

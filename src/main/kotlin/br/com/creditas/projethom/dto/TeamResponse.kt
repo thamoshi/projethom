@@ -13,7 +13,7 @@ data class TeamResponse(
     val createdAt: LocalDateTime
 ) {
 
-    companion object{
+    companion object {
 
         fun fromEntity(team: Team): TeamResponse {
             return TeamResponse(

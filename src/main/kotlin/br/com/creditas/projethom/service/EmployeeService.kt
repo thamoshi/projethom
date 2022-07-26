@@ -25,7 +25,7 @@ class EmployeeService(
                 employeeRepository.findByTeamName(teamName).map {
                     EmployeeResponse.fromEntity(it)
                 }
-            } catch(e: IllegalArgumentException){
+            } catch(e: IllegalArgumentException) {
                 emptyList()
             }
         }
@@ -33,25 +33,16 @@ class EmployeeService(
 
     fun getEmployeeById(
         id: UUID
-    ): EmployeeResponse{
-        val employee = employeeRepository.findById(id).orElseThrow()
+    ): EmployeeResponse {
+        val employee = employeeRepository.getReferenceById(id)
         return EmployeeResponse.fromEntity(employee)
 
-    }
-
-    fun listEmployeesByTeamName(
-        team: String
-    ): List<EmployeeResponse> {
-        val employees = employeeRepository.findByTeamName(team)
-        return employees.map {
-            EmployeeResponse.fromEntity(it)
-        }
     }
 
     fun registerEmployee(
         employeeRequest: EmployeeRequest
     ): EmployeeResponse {
-        val team = teamRepository.findById(employeeRequest.teamId).orElseThrow()
+        val team = teamRepository.getReferenceById(employeeRequest.teamId)
         val employee = EmployeeRequest.toEntity(employeeRequest, team)
         employeeRepository.save(employee)
         return EmployeeResponse.fromEntity(employee)
@@ -61,8 +52,8 @@ class EmployeeService(
         id: UUID,
         updateEmployeeRequest: EmployeeRequest
     ): EmployeeResponse {
-        val employee = employeeRepository.findById(id).orElseThrow()
-        val newTeam = teamRepository.findById(updateEmployeeRequest.teamId).orElseThrow()
+        val employee = employeeRepository.getReferenceById(id)
+        val newTeam = teamRepository.getReferenceById(updateEmployeeRequest.teamId)
         employee.personId = updateEmployeeRequest.personId
         employee.team = newTeam
         employee.role = updateEmployeeRequest.role

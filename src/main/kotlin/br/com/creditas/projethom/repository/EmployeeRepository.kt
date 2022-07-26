@@ -7,7 +7,7 @@ import java.util.UUID
 
 
 @Repository
-interface EmployeeRepository: JpaRepository<Employee, UUID> {
+interface EmployeeRepository : JpaRepository<Employee, UUID> {
     fun findByTeamName(
         teamName: String
     ): List<Employee>

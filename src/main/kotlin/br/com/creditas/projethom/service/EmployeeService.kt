@@ -16,11 +16,7 @@ class EmployeeService(
     fun listEmployees(
         teamName: String?
     ): List<EmployeeResponse> {
-        return if (teamName == null) {
-            employeeRepository.findAll().map {
-                EmployeeResponse.fromEntity(it)
-            }
-        } else {
+        return teamName?.let {
             try {
                 employeeRepository.findByTeamName(teamName).map {
                     EmployeeResponse.fromEntity(it)
@@ -28,6 +24,8 @@ class EmployeeService(
             } catch(e: IllegalArgumentException) {
                 emptyList()
             }
+        } ?: employeeRepository.findAll().map {
+            EmployeeResponse.fromEntity(it)
         }
     }
 

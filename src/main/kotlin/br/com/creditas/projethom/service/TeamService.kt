@@ -13,12 +13,8 @@ class TeamService(
 ) {
 
     fun listTeams(tribe: String?): List<TeamResponse> {
-        if (tribe == null) {
-            return teamRepository.findAll().map {
-                TeamResponse.fromEntity(it)
-            }
-        } else {
-            return try {
+        return tribe?.let {
+            try {
                 val teams = teamRepository.findByTribe(
                     tribe.let {
                         Tribe.valueOf(tribe.uppercase())
@@ -30,6 +26,8 @@ class TeamService(
             } catch (e: IllegalArgumentException) {
                 emptyList()
             }
+        } ?: teamRepository.findAll().map{
+            TeamResponse.fromEntity(it)
         }
     }
 

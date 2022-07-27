@@ -16,14 +16,12 @@ class SystemService(
     fun listSystems(
         teamName: String? = null
     ): List<SystemResponse> {
-        return if (teamName == null) {
-            systemRepository.findAll().map {
-                SystemResponse.fromEntity(it)
-            }
-        } else {
+        return teamName?.let {
             systemRepository.findByOwnerName(teamName).map {
                 SystemResponse.fromEntity(it)
             }
+        } ?: systemRepository.findAll().map {
+            SystemResponse.fromEntity(it)
         }
     }
 

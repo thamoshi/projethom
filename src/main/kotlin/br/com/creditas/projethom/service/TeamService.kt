@@ -2,6 +2,7 @@ package br.com.creditas.projethom.service
 
 import br.com.creditas.projethom.dto.TeamRequest
 import br.com.creditas.projethom.dto.TeamResponse
+import br.com.creditas.projethom.exception.NotFoundException
 import br.com.creditas.projethom.model.Tribe
 import org.springframework.stereotype.Service
 import br.com.creditas.projethom.repository.TeamRepository
@@ -11,6 +12,9 @@ import java.util.UUID
 class TeamService(
     private val teamRepository: TeamRepository
 ) {
+
+    private val teamNotFoundMessage: String = "team not found"
+    private val tribeNotFoundMessage: String = "tribe does not exist"
 
     fun listTeams(tribe: String?): List<TeamResponse> {
         return tribe?.let {
@@ -24,16 +28,20 @@ class TeamService(
                     TeamResponse.fromEntity(it)
                 }
             } catch (e: IllegalArgumentException) {
-                emptyList()
+                throw NotFoundException(tribeNotFoundMessage)
             }
-        } ?: teamRepository.findAll().map{
+        } ?: teamRepository.findAll().map {
             TeamResponse.fromEntity(it)
         }
     }
 
     fun getTeamById(id: UUID): TeamResponse {
-        val team = teamRepository.getReferenceById(id)
-        return TeamResponse.fromEntity(team)
+        try {
+            val team = teamRepository.getReferenceById(id)
+            return TeamResponse.fromEntity(team)
+        } catch (e: Exception) {
+            throw NotFoundException(teamNotFoundMessage)
+        }
     }
 
     fun registerTeam(

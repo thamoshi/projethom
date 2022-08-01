@@ -27,15 +27,15 @@ class ExceptionHandler {
         )
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException::class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    fun handleNotAnEnumValueError(
-        exception: HttpMessageNotReadableException,
+    @ExceptionHandler(NotEnumValueException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleNotEnumValueException(
+        exception: NotEnumValueException,
         request: HttpServletRequest
     ): ErrorView {
         return ErrorView(
-            status = HttpStatus.BAD_REQUEST.value(),
-            error = HttpStatus.BAD_REQUEST.name,
+            status = HttpStatus.NOT_FOUND.value(),
+            error = HttpStatus.NOT_FOUND.name,
             message = exception.message,
             path = request.servletPath
         )
@@ -73,17 +73,17 @@ class ExceptionHandler {
         )
     }
 
-    @ExceptionHandler(Exception::class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleServerError(
-        exception: Exception,
-        request: HttpServletRequest
-    ): ErrorView {
-        return ErrorView(
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            error = HttpStatus.INTERNAL_SERVER_ERROR.name,
-            message = exception.message,
-            path = request.servletPath
-        )
-    }
+//    @ExceptionHandler(Exception::class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    fun handleServerError(
+//        exception: Exception,
+//        request: HttpServletRequest
+//    ): ErrorView {
+//        return ErrorView(
+//            status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//            error = HttpStatus.INTERNAL_SERVER_ERROR.name,
+//            message = exception.message,
+//            path = request.servletPath
+//        )
+//    }
 }

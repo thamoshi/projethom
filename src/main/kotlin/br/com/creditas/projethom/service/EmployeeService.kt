@@ -2,8 +2,13 @@ package br.com.creditas.projethom.service
 
 import br.com.creditas.projethom.dto.EmployeeRequest
 import br.com.creditas.projethom.dto.EmployeeResponse
+import br.com.creditas.projethom.exception.NotEnumValueException
+import br.com.creditas.projethom.exception.NotFoundException
+import br.com.creditas.projethom.model.Role
 import br.com.creditas.projethom.repository.EmployeeRepository
 import br.com.creditas.projethom.repository.TeamRepository
+import org.springframework.dao.EmptyResultDataAccessException
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -12,6 +17,10 @@ class EmployeeService(
     private val employeeRepository: EmployeeRepository,
     private val teamRepository: TeamRepository
 ) {
+    private val teamNotFoundMessage = "team not found. Try listing all the teams registered to get the specific ID."
+    private val employeeNotFoundMessage =
+        "employee not found. Try listing all the employees registered to get the specific ID."
+    private val notRoleValueMessage = "role not found. Must be in ${Role.values().toList()}"
 
     fun listEmployees(
         teamName: String?
@@ -21,7 +30,7 @@ class EmployeeService(
                 employeeRepository.findByTeamName(teamName).map {
                     EmployeeResponse.fromEntity(it)
                 }
-            } catch(e: IllegalArgumentException) {
+            } catch (e: IllegalArgumentException) {
                 emptyList()
             }
         } ?: employeeRepository.findAll().map {
@@ -32,15 +41,19 @@ class EmployeeService(
     fun getEmployeeById(
         id: UUID
     ): EmployeeResponse {
-        val employee = employeeRepository.getReferenceById(id)
-        return EmployeeResponse.fromEntity(employee)
-
+        try {
+            val employee = employeeRepository.getReferenceById(id)
+            return EmployeeResponse.fromEntity(employee)
+        } catch (e: JpaObjectRetrievalFailureException) {
+            throw NotFoundException(employeeNotFoundMessage)
+        }
     }
 
     fun registerEmployee(
         employeeRequest: EmployeeRequest
     ): EmployeeResponse {
-        val team = teamRepository.getReferenceById(employeeRequest.teamId)
+        val team =
+            teamRepository.findById(employeeRequest.teamId).orElseThrow { NotFoundException(teamNotFoundMessage) }
         val employee = EmployeeRequest.toEntity(employeeRequest, team)
         employeeRepository.save(employee)
         return EmployeeResponse.fromEntity(employee)
@@ -50,19 +63,31 @@ class EmployeeService(
         id: UUID,
         updateEmployeeRequest: EmployeeRequest
     ): EmployeeResponse {
-        val employee = employeeRepository.getReferenceById(id)
-        val newTeam = teamRepository.getReferenceById(updateEmployeeRequest.teamId)
-        employee.personId = updateEmployeeRequest.personId
-        employee.team = newTeam
-        employee.role = updateEmployeeRequest.role
-        employeeRepository.save(employee)
-        return EmployeeResponse.fromEntity(employee)
+        try {
+            val employee = employeeRepository.getReferenceById(id)
+            val newRole = Role.valueOf(updateEmployeeRequest.role.uppercase())
+            val newTeam = teamRepository.findById(updateEmployeeRequest.teamId)
+                .orElseThrow { NotFoundException(teamNotFoundMessage) }
+            employee.personId = updateEmployeeRequest.personId
+            employee.team = newTeam
+            employee.role = newRole
+            employeeRepository.save(employee)
+            return EmployeeResponse.fromEntity(employee)
+        } catch (e: JpaObjectRetrievalFailureException) {
+            throw NotFoundException(employeeNotFoundMessage)
+        } catch (e: IllegalArgumentException) {
+            throw NotEnumValueException(notRoleValueMessage)
+        }
     }
 
     fun deleteEmployeeById(
         id: UUID
     ) {
-        employeeRepository.deleteById(id)
+        try {
+            employeeRepository.deleteById(id)
+        } catch (e: EmptyResultDataAccessException) {
+            throw NotFoundException(employeeNotFoundMessage)
+        }
     }
 
 }

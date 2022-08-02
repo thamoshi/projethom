@@ -12,7 +12,7 @@ data class TeamRequest(
     val tribe: String
 ) {
     companion object {
-        private val notTribeValueMessage = "tribe not found. Must be in ${Tribe.values()}"
+        private val notTribeValueMessage = "tribe not found. Must be in ${Tribe.values().toList()}"
         fun toEntity(teamRequest: TeamRequest): Team {
             try {
                 val newTribe = Tribe.valueOf(teamRequest.tribe.uppercase())

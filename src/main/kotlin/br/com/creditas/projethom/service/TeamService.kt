@@ -16,7 +16,8 @@ class TeamService(
     private val teamRepository: TeamRepository
 ) {
 
-    private val teamNotFoundMessage: String = "team not found. Try listing all the teams registered to get the specific ID"
+    private val teamNotFoundMessage: String =
+        "team not found. Try listing all the teams registered to get the specific ID"
     private val notTribeValueMessage: String = "tribe not found. Must be in ${Tribe.values().toList()}"
 
     fun listTeams(tribe: String?): List<TeamResponse> {

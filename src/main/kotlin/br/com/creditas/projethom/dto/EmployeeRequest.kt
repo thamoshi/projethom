@@ -13,8 +13,6 @@ data class EmployeeRequest(
 ) {
 
     companion object {
-
-        private val notRoleValueMessage = "tribe not found. Must be in ${Role.values().toList()}"
         fun toEntity(
             employeeRequest: EmployeeRequest,
             team: Team
@@ -27,7 +25,7 @@ data class EmployeeRequest(
                     role = newRole
                 )
             } catch (e: IllegalArgumentException) {
-                throw NotEnumValueException(notRoleValueMessage)
+                throw NotEnumValueException("role not found. Must be in ${Role.values().toList()}")
             }
         }
     }

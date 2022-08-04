@@ -7,18 +7,12 @@ import br.com.creditas.projethom.exception.NotFoundException
 import br.com.creditas.projethom.model.Tribe
 import org.springframework.stereotype.Service
 import br.com.creditas.projethom.repository.TeamRepository
-import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException
 import java.util.UUID
 
 @Service
 class TeamService(
     private val teamRepository: TeamRepository
 ) {
-
-    private val teamNotFoundMessage: String =
-        "team not found. Try listing all the teams registered to get the specific ID"
-    private val notTribeValueMessage: String = "tribe not found. Must be in ${Tribe.values().toList()}"
 
     fun listTeams(tribe: String?): List<TeamResponse> {
         return tribe?.let {
@@ -32,7 +26,7 @@ class TeamService(
                     TeamResponse.fromEntity(it)
                 }
             } catch (e: IllegalArgumentException) {
-                throw NotEnumValueException(notTribeValueMessage)
+                throw NotEnumValueException("tribe not found. Must be in ${Tribe.values().toList()}")
             }
         } ?: teamRepository.findAll().map {
             TeamResponse.fromEntity(it)
@@ -40,12 +34,9 @@ class TeamService(
     }
 
     fun getTeamById(id: UUID): TeamResponse {
-        try {
-            val team = teamRepository.getReferenceById(id)
-            return TeamResponse.fromEntity(team)
-        } catch (e: JpaObjectRetrievalFailureException) {
-            throw NotFoundException(teamNotFoundMessage)
-        }
+        val team = teamRepository.findById(id)
+            .orElseThrow { NotEnumValueException("team not found. Try listing all the teams registered to get the specific ID") }
+        return TeamResponse.fromEntity(team)
     }
 
     fun registerTeam(
@@ -61,28 +52,25 @@ class TeamService(
         updateTeamRequest: TeamRequest
     ): TeamResponse {
         try {
-            val team = teamRepository.getReferenceById(id)
+            val team = teamRepository.findById(id)
+                .orElseThrow { NotFoundException("team not found. Try listing all the teams registered to get the specific ID") }
             val newTribe = Tribe.valueOf(updateTeamRequest.tribe.uppercase())
             team.name = updateTeamRequest.name
             team.description = updateTeamRequest.description
             team.tribe = newTribe
             teamRepository.save(team)
             return TeamResponse.fromEntity(team)
-        } catch (e: JpaObjectRetrievalFailureException) {
-            throw NotFoundException(teamNotFoundMessage)
         } catch (e: IllegalArgumentException) {
-            throw NotEnumValueException(notTribeValueMessage)
+            throw NotEnumValueException("tribe not found. Must be in ${Tribe.values().toList()}")
         }
     }
 
     fun deleteTeamById(
         id: UUID
     ) {
-        try {
-            teamRepository.deleteById(id)
-        } catch (e: EmptyResultDataAccessException) {
-            throw NotFoundException(teamNotFoundMessage)
-        }
+        teamRepository.findById(id)
+            .orElseThrow { NotFoundException("team not found. Try listing all the teams registered to get the specific ID") }
+        teamRepository.deleteById(id)
     }
 
 }

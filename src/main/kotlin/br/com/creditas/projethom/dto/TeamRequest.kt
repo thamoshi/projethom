@@ -12,7 +12,6 @@ data class TeamRequest(
     val tribe: String
 ) {
     companion object {
-        private val notTribeValueMessage = "tribe not found. Must be in ${Tribe.values().toList()}"
         fun toEntity(teamRequest: TeamRequest): Team {
             try {
                 val newTribe = Tribe.valueOf(teamRequest.tribe.uppercase())
@@ -22,7 +21,7 @@ data class TeamRequest(
                     tribe = newTribe
                 )
             } catch (e: IllegalArgumentException) {
-                throw NotEnumValueException(notTribeValueMessage)
+                throw NotEnumValueException("tribe not found. Must be in ${Tribe.values().toList()}")
             }
         }
     }

@@ -22,7 +22,6 @@ import javax.validation.Valid
 class TeamController(
     private val teamService: TeamService
 ) {
-
     @GetMapping
     fun getTeams(
         @RequestParam(required = false) tribe: String?

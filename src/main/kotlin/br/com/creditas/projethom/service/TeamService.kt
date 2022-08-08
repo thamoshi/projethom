@@ -2,6 +2,8 @@ package br.com.creditas.projethom.service
 
 import br.com.creditas.projethom.dto.TeamRequest
 import br.com.creditas.projethom.dto.TeamResponse
+import br.com.creditas.projethom.exception.NotEnumValueException
+import br.com.creditas.projethom.exception.NotFoundException
 import br.com.creditas.projethom.model.Tribe
 import org.springframework.stereotype.Service
 import br.com.creditas.projethom.repository.TeamRepository
@@ -24,15 +26,16 @@ class TeamService(
                     TeamResponse.fromEntity(it)
                 }
             } catch (e: IllegalArgumentException) {
-                emptyList()
+                throw NotEnumValueException("tribe not found. Must be in ${Tribe.values().toList()}")
             }
-        } ?: teamRepository.findAll().map{
+        } ?: teamRepository.findAll().map {
             TeamResponse.fromEntity(it)
         }
     }
 
     fun getTeamById(id: UUID): TeamResponse {
-        val team = teamRepository.getReferenceById(id)
+        val team = teamRepository.findById(id)
+            .orElseThrow { NotEnumValueException("team not found. Try listing all the teams registered to get the specific ID") }
         return TeamResponse.fromEntity(team)
     }
 
@@ -48,17 +51,25 @@ class TeamService(
         id: UUID,
         updateTeamRequest: TeamRequest
     ): TeamResponse {
-        val team = teamRepository.getReferenceById(id)
-        team.name = updateTeamRequest.name
-        team.description = updateTeamRequest.description
-        team.tribe = updateTeamRequest.tribe
-        teamRepository.save(team)
-        return TeamResponse.fromEntity(team)
+        try {
+            val team = teamRepository.findById(id)
+                .orElseThrow { NotFoundException("team not found. Try listing all the teams registered to get the specific ID") }
+            val newTribe = Tribe.valueOf(updateTeamRequest.tribe.uppercase())
+            team.name = updateTeamRequest.name
+            team.description = updateTeamRequest.description
+            team.tribe = newTribe
+            teamRepository.save(team)
+            return TeamResponse.fromEntity(team)
+        } catch (e: IllegalArgumentException) {
+            throw NotEnumValueException("tribe not found. Must be in ${Tribe.values().toList()}")
+        }
     }
 
     fun deleteTeamById(
         id: UUID
     ) {
+        teamRepository.findById(id)
+            .orElseThrow { NotFoundException("team not found. Try listing all the teams registered to get the specific ID") }
         teamRepository.deleteById(id)
     }
 

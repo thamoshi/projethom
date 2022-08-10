@@ -1,11 +1,8 @@
 package br.com.creditas.projethom.controller
 
-import br.com.creditas.projethom.dto.CatFactResponse
 import br.com.creditas.projethom.dto.SystemRequest
 import br.com.creditas.projethom.dto.SystemResponse
 import br.com.creditas.projethom.service.SystemService
-import com.fasterxml.jackson.databind.util.JSONPObject
-import com.fasterxml.jackson.databind.util.JSONWrappedObject
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.DeleteMapping
-import reactor.core.publisher.Mono
 import java.util.UUID
 import javax.validation.Valid
 
@@ -59,7 +55,7 @@ class SystemController(
     fun updateSystem(
         @PathVariable id: UUID,
         @RequestBody @Valid updateSystemRequest: SystemRequest
-    ): SystemResponse = systemService.updateSystem(id,updateSystemRequest)
+    ): SystemResponse = systemService.updateSystem(id, updateSystemRequest)
 
     @DeleteMapping("/{id}")
     fun deleteSystem(

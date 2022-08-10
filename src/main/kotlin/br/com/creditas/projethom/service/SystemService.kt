@@ -1,11 +1,18 @@
 package br.com.creditas.projethom.service
 
+import br.com.creditas.projethom.dto.CatFactResponse
 import br.com.creditas.projethom.dto.SystemRequest
 import br.com.creditas.projethom.dto.SystemResponse
 import br.com.creditas.projethom.exception.NotFoundException
 import br.com.creditas.projethom.repository.SystemRepository
 import br.com.creditas.projethom.repository.TeamRepository
+import com.fasterxml.jackson.databind.util.JSONPObject
+import com.fasterxml.jackson.databind.util.JSONWrappedObject
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
+import reactor.core.publisher.Mono
+import java.awt.PageAttributes.MediaType
 import java.util.UUID
 
 @Service
@@ -83,6 +90,18 @@ class SystemService(
         systemRepository.findById(id)
             .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
         systemRepository.deleteById(id)
+    }
+
+    fun requestSystemUrl(
+        id: UUID
+    ): Any? {
+        val system = systemRepository.findById(id)
+            .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
+        return WebClient.create(system.url)
+            .get()
+            .retrieve()
+            .bodyToMono<Any>()
+            .block()
     }
 
 }

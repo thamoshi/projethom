@@ -35,12 +35,19 @@ class EmployeeService(
     }
 
     fun getEmployeeById(
-        id: UUID
+        id: UUID,
+        info: Boolean
     ): EmployeeResponse {
         val employee = employeeRepository.findById(id)
             .orElseThrow { NotFoundException("team not found. Try listing all the teams registered to get the specific ID.") }
-        return EmployeeResponse.fromEntity(employee)
-
+        val creditAnalysisResponse = if (info) {
+            employee.personId?.let {
+                creditAnalysisGateway.getPersonInfoByPersonId(it)
+            } ?: throw NotFoundException("person Id is null")
+        } else {
+            null
+        }
+        return EmployeeResponse.fromEntity(employee, creditAnalysisResponse)
     }
 
     fun registerEmployee(

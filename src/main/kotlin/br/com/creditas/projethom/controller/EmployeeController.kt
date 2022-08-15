@@ -33,9 +33,10 @@ class EmployeeController(
 
     @GetMapping("/{id}")
     fun getEmployeeById(
-        @PathVariable id: UUID
+        @PathVariable id: UUID,
+        @RequestParam(required = false) info: Boolean
     ): EmployeeResponse {
-        return employeeService.getEmployeeById(id)
+        return employeeService.getEmployeeById(id, info)
     }
 
     @PostMapping

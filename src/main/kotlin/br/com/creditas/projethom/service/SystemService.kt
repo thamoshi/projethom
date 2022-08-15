@@ -4,7 +4,6 @@ import br.com.creditas.projethom.dto.HealthResponse
 import br.com.creditas.projethom.dto.SystemRequest
 import br.com.creditas.projethom.dto.SystemResponse
 import br.com.creditas.projethom.exception.NotFoundException
-import br.com.creditas.projethom.exception.RequestFailedException
 import br.com.creditas.projethom.integration.HealthCheckGateway
 import br.com.creditas.projethom.model.Status
 import br.com.creditas.projethom.repository.SystemRepository
@@ -43,7 +42,7 @@ class SystemService(
             .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
         return checkHealth?.let {
             val health = requestSystemUrl(id)
-            SystemResponse.fromEntity(system, health.status)
+            SystemResponse.fromEntity(system, health.status, health.errorMessage)
         } ?: SystemResponse.fromEntity(system)
     }
 
@@ -108,7 +107,7 @@ class SystemService(
         } catch (e: WebClientException) {
             HealthResponse(
                 status = Status.DOWN,
-                body = e.message
+                errorMessage = e.message
             )
         }
     }

@@ -4,5 +4,6 @@ import br.com.creditas.projethom.model.Status
 
 data class HealthResponse(
     val status: Status,
-    val body: Any?
+    val body: Any? = null,
+    val errorMessage: String? = null
 )

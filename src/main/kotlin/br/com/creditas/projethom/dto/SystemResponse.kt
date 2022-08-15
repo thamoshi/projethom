@@ -13,17 +13,20 @@ data class SystemResponse(
     val name: String,
     val teamOwner: String?,
     val health: Status?,
+    val healthErrorMessage: String?,
     val createdAt: LocalDateTime
 ) {
     companion object {
         fun fromEntity(
             system: System,
-            healthStatus: Status? = null
+            healthStatus: Status? = null,
+            healthErrorMessage: String? = null
         ): SystemResponse = SystemResponse(
             id = system.id,
             name = system.name,
             teamOwner = system.owner?.name ?: "Does not have an owner",
             health = healthStatus,
+            healthErrorMessage = healthErrorMessage,
             createdAt = system.createdAt
         )
     }

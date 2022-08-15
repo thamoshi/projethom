@@ -1,19 +1,23 @@
 package br.com.creditas.projethom.service
 
+import br.com.creditas.projethom.dto.HealthResponse
 import br.com.creditas.projethom.dto.SystemRequest
 import br.com.creditas.projethom.dto.SystemResponse
 import br.com.creditas.projethom.exception.NotFoundException
+import br.com.creditas.projethom.exception.RequestFailedException
+import br.com.creditas.projethom.integration.HealthCheckGateway
+import br.com.creditas.projethom.model.Status
 import br.com.creditas.projethom.repository.SystemRepository
 import br.com.creditas.projethom.repository.TeamRepository
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
+import org.springframework.web.reactive.function.client.WebClientException
 import java.util.UUID
 
 @Service
 class SystemService(
     private val systemRepository: SystemRepository,
-    private val teamRepository: TeamRepository
+    private val teamRepository: TeamRepository,
+    private val healthCheckGateway: HealthCheckGateway
 ) {
     fun listSystems(
         teamName: String? = null
@@ -32,11 +36,15 @@ class SystemService(
     }
 
     fun getSystemById(
-        id: UUID
+        id: UUID,
+        checkHealth: String?
     ): SystemResponse {
         val system = systemRepository.findById(id)
             .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
-        return SystemResponse.fromEntity(system)
+        return checkHealth?.let {
+            val health = requestSystemUrl(id)
+            SystemResponse.fromEntity(system, health.status)
+        } ?: SystemResponse.fromEntity(system)
     }
 
     fun getDocumentationBySystemId(
@@ -89,14 +97,19 @@ class SystemService(
 
     fun requestSystemUrl(
         id: UUID
-    ): Any? {
-        val system = systemRepository.findById(id)
-            .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
-        return WebClient.create(system.url)
-            .get()
-            .retrieve()
-            .bodyToMono<Any>()
-            .block()
+    ): HealthResponse {
+        return try {
+            val system = systemRepository.findById(id)
+                .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
+            HealthResponse(
+                status = Status.UP,
+                body = healthCheckGateway.checkSystemHealth(system.url)
+            )
+        } catch (e: WebClientException) {
+            HealthResponse(
+                status = Status.DOWN,
+                body = e.message
+            )
+        }
     }
-
 }

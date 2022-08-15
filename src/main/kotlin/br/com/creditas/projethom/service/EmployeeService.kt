@@ -84,12 +84,12 @@ class EmployeeService(
 
     fun requestPersonInfo(
         id: UUID
-    ): CreditAnalysisResponse? {
+    ): CreditAnalysisResponse {
         val employee = employeeRepository.findById(id)
             .orElseThrow { NotFoundException("employee not found. Try listing all the employees registered to get the specific ID.") }
         return employee.personId?.let {
             creditAnalysisGateway.getPersonInfoByPersonId(it)
-        }
+        } ?: throw NotFoundException("person Id is null")
     }
 
 }

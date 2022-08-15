@@ -62,7 +62,7 @@ class EmployeeController(
     @GetMapping("/info/{id}")
     fun getEmployeeInfo(
         @PathVariable id: UUID
-    ): CreditAnalysisResponse? {
+    ): CreditAnalysisResponse {
         return employeeService.requestPersonInfo(id)
     }
 }

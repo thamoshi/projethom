@@ -34,7 +34,7 @@ class SystemController(
     @GetMapping("/{id}")
     fun getSystemById(
         @PathVariable id: UUID,
-        @RequestParam(required = false) checkHealth: String?
+        @RequestParam(required = false) checkHealth: Boolean
     ): SystemResponse {
         return systemService.getSystemById(id, checkHealth)
     }

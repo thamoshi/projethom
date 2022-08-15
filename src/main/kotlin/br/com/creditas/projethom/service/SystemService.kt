@@ -36,14 +36,16 @@ class SystemService(
 
     fun getSystemById(
         id: UUID,
-        checkHealth: String?
+        checkHealth: Boolean
     ): SystemResponse {
         val system = systemRepository.findById(id)
             .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
-        return checkHealth?.let {
+        return if (checkHealth) {
             val health = requestSystemUrl(id)
             SystemResponse.fromEntity(system, health.status, health.errorMessage)
-        } ?: SystemResponse.fromEntity(system)
+        } else {
+            SystemResponse.fromEntity(system)
+        }
     }
 
     fun getDocumentationBySystemId(

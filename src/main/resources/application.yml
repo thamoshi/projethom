@@ -17,4 +17,4 @@ spring:
       ACCEPT_CASE_INSENSITIVE_ENUMS: true
 external-api:
   credit-analysis:
-    url: "https://81a5-201-182-193-99.sa.ngrok.io"
+    url: https://81a5-201-182-193-99.sa.ngrok.io

@@ -1,9 +1,11 @@
 package br.com.creditas.projethom.service
 
+import br.com.creditas.projethom.dto.CreditAnalysisResponse
 import br.com.creditas.projethom.dto.EmployeeRequest
 import br.com.creditas.projethom.dto.EmployeeResponse
 import br.com.creditas.projethom.exception.NotEnumValueException
 import br.com.creditas.projethom.exception.NotFoundException
+import br.com.creditas.projethom.integration.CreditAnalysisGateway
 import br.com.creditas.projethom.model.Role
 import br.com.creditas.projethom.repository.EmployeeRepository
 import br.com.creditas.projethom.repository.TeamRepository
@@ -13,7 +15,8 @@ import java.util.UUID
 @Service
 class EmployeeService(
     private val employeeRepository: EmployeeRepository,
-    private val teamRepository: TeamRepository
+    private val teamRepository: TeamRepository,
+    private val creditAnalysisGateway: CreditAnalysisGateway
 ) {
     fun listEmployees(
         teamName: String?
@@ -77,6 +80,16 @@ class EmployeeService(
         employeeRepository.findById(id)
             .orElseThrow { NotFoundException("employee not found. Try listing all the employees registered to get the specific ID.") }
         employeeRepository.deleteById(id)
+    }
+
+    fun requestPersonInfo(
+        id: UUID
+    ): CreditAnalysisResponse? {
+        val employee = employeeRepository.findById(id)
+            .orElseThrow { NotFoundException("employee not found. Try listing all the employees registered to get the specific ID.") }
+        return employee.personId?.let {
+            creditAnalysisGateway.getPersonInfoByPersonId(it)
+        }
     }
 
 }

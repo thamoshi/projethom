@@ -1,5 +1,6 @@
 package br.com.creditas.projethom.controller
 
+import br.com.creditas.projethom.dto.CreditAnalysisResponse
 import br.com.creditas.projethom.dto.EmployeeRequest
 import br.com.creditas.projethom.dto.EmployeeResponse
 import br.com.creditas.projethom.service.EmployeeService
@@ -56,5 +57,12 @@ class EmployeeController(
         @PathVariable id: UUID
     ) {
         employeeService.deleteEmployeeById(id)
+    }
+
+    @GetMapping("/info/{id}")
+    fun getEmployeeInfo(
+        @PathVariable id: UUID
+    ): CreditAnalysisResponse? {
+        return employeeService.requestPersonInfo(id)
     }
 }

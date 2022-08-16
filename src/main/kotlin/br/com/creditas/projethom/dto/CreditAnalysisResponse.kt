@@ -6,7 +6,7 @@ data class CreditAnalysisResponse(
     val address: CreditAnalysisAddress,
     val birthDate: String,
     val contacts: List<CreditAnalysisContact>,
-    val cpf: Long,
+    val cpf: String,
     val id: UUID,
     val lastName: String,
     val name: String,

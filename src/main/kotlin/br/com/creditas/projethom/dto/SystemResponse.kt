@@ -12,7 +12,7 @@ data class SystemResponse(
     val id: UUID,
     val name: String,
     val teamOwner: String?,
-    val health: Status?,
+    val latestHealthStatus: Status?,
     val healthErrorMessage: String?,
     val createdAt: LocalDateTime
 ) {
@@ -25,7 +25,7 @@ data class SystemResponse(
             id = system.id,
             name = system.name,
             teamOwner = system.owner?.name ?: "Does not have an owner",
-            health = healthStatus,
+            latestHealthStatus = healthStatus,
             healthErrorMessage = healthErrorMessage,
             createdAt = system.createdAt
         )

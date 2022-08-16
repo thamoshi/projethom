@@ -67,7 +67,7 @@ class SystemController(
     }
 
     @GetMapping("/url/{id}")
-    fun getSystemUrlRequest(
+    fun getSystemHealthByUrlRequest(
         @PathVariable id: UUID
     ): HealthResponse {
         return systemService.requestSystemUrl(id)

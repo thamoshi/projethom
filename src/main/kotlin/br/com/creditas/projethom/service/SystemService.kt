@@ -42,7 +42,7 @@ class SystemService(
         return SystemResponse.fromEntity(system)
     }
 
-    fun requestSystemUrl(
+    fun checkSystemHealth(
         id: UUID
     ): HealthResponse {
         return try {

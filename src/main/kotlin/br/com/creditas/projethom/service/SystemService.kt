@@ -35,16 +35,28 @@ class SystemService(
     }
 
     fun getSystemById(
-        id: UUID,
-        checkHealth: Boolean
+        id: UUID
     ): SystemResponse {
         val system = systemRepository.findById(id)
             .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
-        return if (checkHealth) {
-            val health = requestSystemUrl(id)
-            SystemResponse.fromEntity(system, health.status, health.errorMessage)
-        } else {
-            SystemResponse.fromEntity(system)
+        return SystemResponse.fromEntity(system)
+    }
+
+    fun requestSystemUrl(
+        id: UUID
+    ): HealthResponse {
+        return try {
+            val system = systemRepository.findById(id)
+                .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
+            HealthResponse(
+                status = Status.UP,
+                body = healthCheckGateway.checkSystemHealth(system.url)
+            )
+        } catch (e: WebClientException) {
+            HealthResponse(
+                status = Status.DOWN,
+                errorMessage = e.message
+            )
         }
     }
 
@@ -94,23 +106,5 @@ class SystemService(
         systemRepository.findById(id)
             .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
         systemRepository.deleteById(id)
-    }
-
-    fun requestSystemUrl(
-        id: UUID
-    ): HealthResponse {
-        return try {
-            val system = systemRepository.findById(id)
-                .orElseThrow { NotFoundException("system not found. Try listing all the systems registered to get the specific ID") }
-            HealthResponse(
-                status = Status.UP,
-                body = healthCheckGateway.checkSystemHealth(system.url)
-            )
-        } catch (e: WebClientException) {
-            HealthResponse(
-                status = Status.DOWN,
-                errorMessage = e.message
-            )
-        }
     }
 }

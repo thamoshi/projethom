@@ -33,13 +33,19 @@ class SystemController(
 
     @GetMapping("/{id}")
     fun getSystemById(
-        @PathVariable id: UUID,
-        @RequestParam(required = false) checkHealth: Boolean
+        @PathVariable id: UUID
     ): SystemResponse {
-        return systemService.getSystemById(id, checkHealth)
+        return systemService.getSystemById(id)
     }
 
-    @GetMapping("/documentation/{id}")
+    @GetMapping("/{id}/health")
+    fun getSystemHealthByUrlRequest(
+        @PathVariable id: UUID
+    ): HealthResponse {
+        return systemService.requestSystemUrl(id)
+    }
+
+    @GetMapping("/{id}/documentation")
     fun getSystemDocumentation(
         @PathVariable id: UUID
     ): String {
@@ -64,13 +70,6 @@ class SystemController(
         @PathVariable id: UUID
     ) {
         systemService.deleteSystemById(id)
-    }
-
-    @GetMapping("/url/{id}")
-    fun getSystemHealthByUrlRequest(
-        @PathVariable id: UUID
-    ): HealthResponse {
-        return systemService.requestSystemUrl(id)
     }
 
 }

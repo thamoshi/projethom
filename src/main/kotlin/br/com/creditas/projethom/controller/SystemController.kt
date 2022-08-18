@@ -1,5 +1,6 @@
 package br.com.creditas.projethom.controller
 
+import br.com.creditas.projethom.dto.HealthResponse
 import br.com.creditas.projethom.dto.SystemRequest
 import br.com.creditas.projethom.dto.SystemResponse
 import br.com.creditas.projethom.service.SystemService
@@ -37,7 +38,14 @@ class SystemController(
         return systemService.getSystemById(id)
     }
 
-    @GetMapping("/documentation/{id}")
+    @GetMapping("/{id}/health")
+    fun getSystemHealthByUrlRequest(
+        @PathVariable id: UUID
+    ): HealthResponse {
+        return systemService.checkSystemHealth(id)
+    }
+
+    @GetMapping("/{id}/documentation")
     fun getSystemDocumentation(
         @PathVariable id: UUID
     ): String {
@@ -55,7 +63,7 @@ class SystemController(
     fun updateSystem(
         @PathVariable id: UUID,
         @RequestBody @Valid updateSystemRequest: SystemRequest
-    ): SystemResponse = systemService.updateSystem(id,updateSystemRequest)
+    ): SystemResponse = systemService.updateSystem(id, updateSystemRequest)
 
     @DeleteMapping("/{id}")
     fun deleteSystem(

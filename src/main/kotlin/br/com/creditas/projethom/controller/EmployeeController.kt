@@ -59,11 +59,4 @@ class EmployeeController(
     ) {
         employeeService.deleteEmployeeById(id)
     }
-
-    @GetMapping("/info/{id}")
-    fun getEmployeeInfo(
-        @PathVariable id: UUID
-    ): CreditAnalysisResponse {
-        return employeeService.requestPersonInfo(id)
-    }
 }
